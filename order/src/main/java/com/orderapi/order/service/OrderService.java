@@ -6,11 +6,13 @@ import com.orderapi.order.controller.dto.request.OrderRequest;
 import com.orderapi.order.controller.dto.request.ProductRequest;
 import com.orderapi.order.controller.dto.response.OrderResponse;
 import com.orderapi.order.controller.dto.response.ProductResponse;
+import com.orderapi.order.controller.dto.response.UpdateStatusResponse;
 import com.orderapi.order.entity.Order;
 import com.orderapi.order.entity.Product;
 import com.orderapi.order.entity.Status;
 import com.orderapi.order.mapper.OrderMapper;
 import com.orderapi.order.mapper.ProductMapper;
+import com.orderapi.order.mapper.UpdateStatusMapper;
 import com.orderapi.order.repository.OrderRepository;
 import org.springframework.stereotype.Service;
 
@@ -25,14 +27,16 @@ public class OrderService {
     private final ProductClient productClient;
     private final ProductMapper productMapper;
     private final OrderMapper orderMapper;
+    private final UpdateStatusMapper updateStatusMapper;
 
     public OrderService(OrderRepository orderRepository, UserClient userClient,
-                        ProductClient productClient, ProductMapper productMapper, OrderMapper orderMapper) {
+                        ProductClient productClient, ProductMapper productMapper, OrderMapper orderMapper, UpdateStatusMapper updateStatusMapper) {
         this.orderRepository = orderRepository;
         this.userClient = userClient;
         this.productClient = productClient;
         this.productMapper = productMapper;
         this.orderMapper = orderMapper;
+        this.updateStatusMapper = updateStatusMapper;
     }
 
     public OrderResponse addOrder(OrderRequest request) {
@@ -67,5 +71,18 @@ public class OrderService {
 
         orderRepository.save(order);
         return orderMapper.toResponse(order);
+    }
+
+    public UpdateStatusResponse updateStatus (UUID id){
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+
+        if (order.getStatus() == Status.CONCLUDED){
+            new RuntimeException("Pedido já concluído");
+        }
+
+        order.setStatus(Status.CONCLUDED);
+
+        return updateStatusMapper.toResponse(order);
     }
 }
