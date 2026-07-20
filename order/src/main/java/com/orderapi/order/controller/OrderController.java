@@ -11,7 +11,7 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/pedido")
 public class OrderController {
 
     private final OrderService orderService;
@@ -26,9 +26,15 @@ public class OrderController {
         return orderService.addOrder(request);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("atualizar-status-pedido/{id}")
     public UpdateStatusResponse updateStatus(@PathVariable UUID id){
         return orderService.updateStatus(id);
+    }
+
+    @PutMapping("atualizar-item-pedido")
+    public OrderResponse updateItemOrder(@Validated @RequestBody OrderRequest request){
+        return orderService.udateItemOrder(request);
+
     }
 
 }

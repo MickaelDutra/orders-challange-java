@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,12 @@ public class Order {
     private int userId;
     private Status status;
     private BigDecimal totalPrice;
-    @OneToMany(mappedBy = "order")
-    private List<Product> product;
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    private List<Product> product = new ArrayList<>();
 
+
+    public void addProduct(Product product) {
+        product.setOrder(this);
+        this.product.add(product);
+    }
 }
