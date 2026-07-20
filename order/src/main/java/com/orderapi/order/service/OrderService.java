@@ -14,7 +14,6 @@ import com.orderapi.order.mapper.OrderMapper;
 import com.orderapi.order.mapper.ProductMapper;
 import com.orderapi.order.mapper.UpdateStatusMapper;
 import com.orderapi.order.repository.OrderRepository;
-import com.orderapi.order.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,17 +23,15 @@ import java.util.*;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-    private final ProductRepository productRepository;
     private final UserClient userClient;
     private final ProductClient productClient;
     private final ProductMapper productMapper;
     private final OrderMapper orderMapper;
     private final UpdateStatusMapper updateStatusMapper;
 
-    public OrderService(OrderRepository orderRepository, ProductRepository productRepository, UserClient userClient,
+    public OrderService(OrderRepository orderRepository, UserClient userClient,
                         ProductClient productClient, ProductMapper productMapper, OrderMapper orderMapper, UpdateStatusMapper updateStatusMapper) {
         this.orderRepository = orderRepository;
-        this.productRepository = productRepository;
         this.userClient = userClient;
         this.productClient = productClient;
         this.productMapper = productMapper;
@@ -45,6 +42,11 @@ public class OrderService {
     public OrderResponse addOrder(OrderRequest request) {
         if (userClient.getUser(request.userId()) == null) {
             throw new RuntimeException("Usuário não encontrado");
+        }
+        Optional<Order> userOrder = orderRepository.findByUserIdAndStatus(request.userId(), Status.PENDING);
+
+        if (userOrder.isPresent()) {
+           return udateItemOrder(request);
         }
 
         Map<Integer, Product> productsMap = new HashMap<>();
