@@ -1,6 +1,6 @@
 package com.orderapi.order.client;
 
-import com.orderapi.order.controller.dto.response.ProductResponse;
+import com.orderapi.order.dto.response.ProductResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 

@@ -1,4 +1,4 @@
-package com.orderapi.order.controller.dto.request;
+package com.orderapi.order.dto.request;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.orderapi.order.controller;
 
-import com.orderapi.order.controller.dto.request.OrderRequest;
-import com.orderapi.order.controller.dto.response.OrderResponse;
-import com.orderapi.order.controller.dto.response.UpdateStatusResponse;
+import com.orderapi.order.dto.request.OrderRequest;
+import com.orderapi.order.dto.response.OrderResponse;
+import com.orderapi.order.dto.response.UpdateStatusResponse;
 import com.orderapi.order.service.OrderService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

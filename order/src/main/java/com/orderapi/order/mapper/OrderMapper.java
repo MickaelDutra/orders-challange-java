@@ -1,7 +1,7 @@
 package com.orderapi.order.mapper;
 
 
-import com.orderapi.order.controller.dto.response.OrderResponse;
+import com.orderapi.order.dto.response.OrderResponse;
 import com.orderapi.order.entity.Order;
 import org.springframework.stereotype.Component;
 

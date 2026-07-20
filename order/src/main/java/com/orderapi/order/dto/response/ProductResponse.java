@@ -1,4 +1,4 @@
-package com.orderapi.order.controller.dto.response;
+package com.orderapi.order.dto.response;
 
 import java.math.BigDecimal;
 

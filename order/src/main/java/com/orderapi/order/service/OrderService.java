@@ -2,14 +2,17 @@ package com.orderapi.order.service;
 
 import com.orderapi.order.client.ProductClient;
 import com.orderapi.order.client.UserClient;
-import com.orderapi.order.controller.dto.request.OrderRequest;
-import com.orderapi.order.controller.dto.request.ProductRequest;
-import com.orderapi.order.controller.dto.response.OrderResponse;
-import com.orderapi.order.controller.dto.response.ProductResponse;
-import com.orderapi.order.controller.dto.response.UpdateStatusResponse;
+import com.orderapi.order.dto.request.OrderRequest;
+import com.orderapi.order.dto.request.ProductRequest;
+import com.orderapi.order.dto.response.OrderResponse;
+import com.orderapi.order.dto.response.ProductResponse;
+import com.orderapi.order.dto.response.UpdateStatusResponse;
 import com.orderapi.order.entity.Order;
 import com.orderapi.order.entity.Product;
 import com.orderapi.order.entity.Status;
+import com.orderapi.order.exception.OrderConcludedException;
+import com.orderapi.order.exception.OrderNotFoundException;
+import com.orderapi.order.exception.UserNotFoundException;
 import com.orderapi.order.mapper.OrderMapper;
 import com.orderapi.order.mapper.ProductMapper;
 import com.orderapi.order.mapper.UpdateStatusMapper;
@@ -41,7 +44,7 @@ public class OrderService {
 
     public OrderResponse addOrder(OrderRequest request) {
         if (userClient.getUser(request.userId()) == null) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UserNotFoundException(request.userId());
         }
         Optional<Order> userOrder = orderRepository.findByUserIdAndStatus(request.userId(), Status.PENDING);
 
@@ -83,10 +86,10 @@ public class OrderService {
 
     public UpdateStatusResponse updateStatus(UUID id) {
         Order order = orderRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+                .orElseThrow(() -> new OrderNotFoundException(id));
 
         if (order.getStatus() == Status.CONCLUDED) {
-           throw new RuntimeException("Pedido já concluído");
+           throw new OrderConcludedException();
         }
 
         order.setStatus(Status.CONCLUDED);
@@ -97,13 +100,13 @@ public class OrderService {
 
     public OrderResponse udateItemOrder(OrderRequest request) {
         if (userClient.getUser(request.userId()) == null) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UserNotFoundException(request.userId());
         }
 
         Optional<Order> userOrder = orderRepository.findByUserIdAndStatus(request.userId(), Status.PENDING);
 
         if (userOrder.isEmpty()) {
-            throw new RuntimeException("Usuário não possui pedido pendente");
+            throw new OrderNotFoundException("O usuário não possui pedido pendente");
         }
 
         Map<Integer, Product> productsMap = new HashMap<>();
