@@ -1,0 +1,93 @@
+{
+  "info": {
+    "_postman_id": "d71767d5-6e95-41e7-b67f-72ac64945087",
+    "name": "orders",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52573869",
+    "_collection_link": "https://go.postman.co/collection/52573869-d71767d5-6e95-41e7-b67f-72ac64945087?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "add order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userId\": 3,\n    \"products\": [\n        {\n            \"id\": 1\n        },\n        {\n            \"id\": 2\n        },\n        {\n            \"id\": 2\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/pedido",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "pedido"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update item order",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userId\": 3,\n    \"products\": [\n        {\n            \"id\": 1\n        }\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/pedido/atualizar-item-pedido",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "pedido",
+            "atualizar-item-pedido"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update status",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "http://localhost:8080/pedido/atualizar-status-pedido/7ce89808-99c6-4f21-a0e2-53b5a5a12c50",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "pedido",
+            "atualizar-status-pedido",
+            "7ce89808-99c6-4f21-a0e2-53b5a5a12c50"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
