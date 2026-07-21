@@ -49,26 +49,12 @@ public class OrderService {
         Optional<Order> userOrder = orderRepository.findByUserIdAndStatus(request.userId(), Status.PENDING);
 
         if (userOrder.isPresent()) {
-           return udateItemOrder(request);
+            return udateItemOrder(request);
         }
 
-        Map<Integer, Product> productsMap = new HashMap<>();
-        BigDecimal total = BigDecimal.ZERO;
-        for (ProductRequest productRequest : request.products()) {
-            ProductResponse productResponse = productClient.getProduct(productRequest.id());
+        Map<Integer, Product> productsMap = buildProductMap(request.products(), new HashMap<>());
 
-            Product product = productsMap.get(productResponse.id());
-
-            if (product == null) {
-                product = productMapper.toEntity(productResponse);
-                productsMap.put(productResponse.id(), product);
-            } else {
-                product.setAmount(1 + product.getAmount());
-                product.setPartialAmount(product.getPrice().multiply(BigDecimal.valueOf(product.getAmount())));
-            }
-            total = productsMap.values().stream().map(Product::getPartialAmount).reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
-        }
-
+        BigDecimal total = productsMap.values().stream().map(Product::getPartialAmount).reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
 
         Order order = new Order();
 
@@ -89,7 +75,7 @@ public class OrderService {
                 .orElseThrow(() -> new OrderNotFoundException(id));
 
         if (order.getStatus() == Status.CONCLUDED) {
-           throw new OrderConcludedException();
+            throw new OrderConcludedException();
         }
 
         order.setStatus(Status.CONCLUDED);
@@ -109,15 +95,26 @@ public class OrderService {
             throw new OrderNotFoundException("O usuário não possui pedido pendente");
         }
 
-        Map<Integer, Product> productsMap = new HashMap<>();
-
-        BigDecimal total = userOrder.get().getTotalPrice();
+        Map<Integer, Product> existensProductsMap = new HashMap<>();
 
         for (Product product : userOrder.get().getProduct()) {
-            productsMap.put(product.getIdItem(), product);
+            existensProductsMap.put(product.getIdItem(), product);
         }
 
-        for (ProductRequest productRequest : request.products()) {
+        Map<Integer, Product> productsMap = buildProductMap(request.products(),  existensProductsMap);
+
+        BigDecimal total = productsMap.values().stream().map(Product::getPartialAmount).reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
+
+        userOrder.get().setTotalPrice(total);
+        userOrder.get().setProduct(new ArrayList<>(productsMap.values()));
+
+        orderRepository.save(userOrder.get());
+        return orderMapper.toResponse(userOrder.get());
+    }
+
+    private Map<Integer, Product> buildProductMap(List<ProductRequest> productRequests, Map<Integer, Product> productsMap) {
+
+        for (ProductRequest productRequest : productRequests) {
             ProductResponse productResponse = productClient.getProduct(productRequest.id());
 
             Product product = productsMap.get(productResponse.id());
@@ -129,13 +126,7 @@ public class OrderService {
                 product.setAmount(1 + product.getAmount());
                 product.setPartialAmount(product.getPrice().multiply(BigDecimal.valueOf(product.getAmount())));
             }
-            total = productsMap.values().stream().map(Product::getPartialAmount).reduce(BigDecimal::add).orElse(BigDecimal.valueOf(0));
         }
-
-        userOrder.get().setTotalPrice(total);
-        userOrder.get().setProduct(new ArrayList<>(productsMap.values()));
-
-        orderRepository.save(userOrder.get());
-        return orderMapper.toResponse(userOrder.get());
+        return productsMap;
     }
 }
