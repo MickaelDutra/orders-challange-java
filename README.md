@@ -85,7 +85,7 @@ exemplo input
         {
             "id": 1,
             "price": 109.95
-        },
+        }
     ]
 }
 ```
@@ -132,14 +132,14 @@ Boa sorte!
 
 # CheckList do que preciso entregar
 
-[x] Padrão RestFull
-[x] Requisição a API Product
-[x] Requisição a API User
-[x] Calcular o total do pedido para um cliente
-	[x] Se cadastrado dois itens com id iguais, somar a qtd e multiplicar o valor de partialAmount
-[x] Salvar os dados em DB
-	[x] Usar UUID para os id
-[] Testes unitários
+	[x] Padrão RestFull
+	[x] Requisição a API Product
+	[x] Requisição a API User
+	[x] Calcular o total do pedido para um cliente
+		[x] Se cadastrado dois itens com id iguais, somar a qtd e multiplicar o valor de partialAmount
+	[x] Salvar os dados em DB
+		[x] Usar UUID para os id
+	[] Testes unitários
 
 ## Endpoints
 1. /pedido
@@ -149,4 +149,4 @@ Boa sorte!
 ## Adicionais
 1. Ao realizar pedido a um para um usuário que possui um pedido pendente, ele soma a quantidade de produtos já existentes
 2. Tratamento de exceções
-3. Conexão com pai externa através de RestClient
+3. Conexão com API externa através de RestClient
