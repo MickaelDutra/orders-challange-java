@@ -141,7 +141,7 @@ Boa sorte!
 		[x] Se cadastrado dois itens com id iguais, somar a qtd e multiplicar o valor de partialAmount
 	[x] Salvar os dados em DB
 		[x] Usar UUID para os id
-	[] Testes unitários
+	[x] Testes unitários
 
 ## Endpoints
 1. /pedido
