@@ -46,6 +46,7 @@ public class OrderService {
         if (userClient.getUser(request.userId()) == null) {
             throw new UserNotFoundException(request.userId());
         }
+
         Optional<Order> userOrder = orderRepository.findByUserIdAndStatus(request.userId(), Status.PENDING);
 
         if (userOrder.isPresent()) {
