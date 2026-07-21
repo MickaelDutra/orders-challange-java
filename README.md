@@ -130,7 +130,9 @@ Faça o fork do projeto para algum repositório público e nos envie assim que c
 
 Boa sorte!
 
-# CheckList do que preciso entregar
+
+# Anotações durante o desenvolvimento:
+# CheckList do que preciso entregar 
 
 	[x] Padrão RestFull
 	[x] Requisição a API Product
